@@ -1,10 +1,9 @@
-import { View } from 'react-native';
-import Home from './src/screens/home/home';
+import Routes from "./src/routes"
 
 export default function App() {
   return <>
 
-        <Home/>
+        <Routes/>
 
-      </>
+      </>;
 }
