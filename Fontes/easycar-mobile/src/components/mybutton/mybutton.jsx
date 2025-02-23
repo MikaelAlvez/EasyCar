@@ -1,9 +1,9 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Text } from "react-native";
 import { styles } from "./mybutton.style"
 
-function MyButton(){
+function MyButton(props){
     return <TouchableOpacity style={styles.btnYellow}>
-        <Text style={styles.textDark}>CONFIRMAR</Text>
+        <Text style={styles.textDark}>{props.text}</Text>
     </TouchableOpacity>
 }
 

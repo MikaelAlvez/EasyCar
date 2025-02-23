@@ -1,8 +1,10 @@
 import MyButton from "../../components/mybutton/mybutton";
+import { Text } from "react-native";
 
-function Passenger(){
+function Passenger(props){
     return <>
-        <MyButton></MyButton>
+        <Text>Passageiros</Text>
+        <MyButton text="CONFIRMAR"></MyButton>
     </>
 
 }

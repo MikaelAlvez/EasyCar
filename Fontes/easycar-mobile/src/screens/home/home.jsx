@@ -2,12 +2,12 @@ import { Text, Image, ImageBackground, TouchableOpacity } from "react-native";
 import icons from "../../constants/icons.js"
 import  { styles } from "./home.style.js"
 
-function Home(){
+function Home(props){
     function OpenPassenger(){
-
+        props.navigation.navigate("passenger");
     }
     function OpenRide(){
-
+        props.navigation.navigate("");
     }
 
     return <ImageBackground source={icons.bg} resizeMode="cover" style={styles.bg}>
