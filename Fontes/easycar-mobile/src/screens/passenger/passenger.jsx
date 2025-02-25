@@ -44,7 +44,7 @@ function Passenger(props){
                 </View>
         </View>
 
-        <MyButton text="CONFIRMAR"></MyButton>
+        <MyButton text="CONFIRMAR" theme="red"></MyButton>
 
     </View>
 
