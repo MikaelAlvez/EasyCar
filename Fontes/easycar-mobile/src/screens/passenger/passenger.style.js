@@ -1,10 +1,10 @@
-import { View } from "react-native";
+export const styles = {
+    container: {
+        flex: 1,
 
-
-function Passenger(){
-    return <View>
-        
-    </View>
+    },
+    map: {
+        flex: 1,
+        width: "100%"
+    }
 }
-
-export default Passenger;

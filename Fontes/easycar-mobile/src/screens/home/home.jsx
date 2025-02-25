@@ -7,7 +7,7 @@ function Home(props){
         props.navigation.navigate("passenger");
     }
     function OpenRide(){
-        props.navigation.navigate("");
+        props.navigation.navigate("ride");
     }
 
     return <ImageBackground source={icons.bg} resizeMode="cover" style={styles.bg}>
