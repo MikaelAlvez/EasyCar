@@ -4,6 +4,10 @@ import { json_rides } from "../../constants/dados.js"
 import icons from "../../constants/icons.js";
 
 function Ride(props){
+    function ClickRide(id){
+        props.navigation.navigate("rideDetail");
+    }
+
     return <View style={styles.container}>
 
         <FlatList 
@@ -11,7 +15,7 @@ function Ride(props){
             keyExtractor={(ride) => ride.ride_id}
             showsHorizontalScrollIndicator={false}
             renderItem={({item}) =>{
-                return <TouchableOpacity style={styles.ride}>
+                return <TouchableOpacity style={styles.ride} onPress={() => ClickRide(item.ride_id)}>
                     <View style={styles.containerName}>
                         <Image source={icons.car} style={styles.car}></Image>
                         <Text style={styles.name}>{item.passenger_name}</Text>
