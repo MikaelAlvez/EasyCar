@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { getCurrentPositionAsync, requestForegroundPermissionsAsync, reverseGeocodeAsync } from "expo-location";
 
 function Passenger(props){
+    const userId = 1;
+
     const [myLocation, setMyLocation] = useState({
     
     });
@@ -14,7 +16,7 @@ function Passenger(props){
 
     const [pickupAddress, setPickupAddress] = useState("");
 
-    const [dropoffAddress, setDropoffAddress] = useState("");
+    const [dropoffAddress, setDropAddress] = useState("");
 
     async function RequestPermissionAndGetLocation(){
 
@@ -54,6 +56,7 @@ function Passenger(props){
         const response = await RequestRideFromUser();
 
         if(!response.ride_id){
+            //Solicitar permissão de localização ao GPS
             const location = await RequestPermissionAndGetLocation();
 
             if(location.latitude){
@@ -68,6 +71,19 @@ function Passenger(props){
 
         }
 
+    }
+
+    async function AskForRide(){
+        const json = { 
+            passenger_id: 1,
+            pickup_address: pickupAddress,
+            dropoff_address: dropoffAddress,
+            pickup_latitude: myLocation.latitude,
+            pickup_longitude: myLocation.longitude,
+        }
+        console.log("Post para servidor: ", json);
+        props.navigation.goBack(Alert.alert("Carona solicitada com sucesso!"));
+        
     }
 
     async function RequestRideFromUser(){
@@ -119,15 +135,23 @@ function Passenger(props){
                 </View>
                 <View style={styles.footerFields}>
                     <Text>Origem</Text>
-                    <TextInput style={styles.input} value={pickupAddress}></TextInput>
+                    <TextInput 
+                        style={styles.input} 
+                        value={pickupAddress} 
+                        onChangeText={(text) => setPickupAddress(text)}>
+                    </TextInput>
                 </View>
                 <View style={styles.footerFields}>
                     <Text>Destino</Text>
-                    <TextInput style={styles.input} value={dropoffAddress}></TextInput>
+                    <TextInput 
+                        style={styles.input}
+                        value={dropoffAddress}
+                        onChangeText={(text) => setDropAddress(text)}>
+                    </TextInput>
                 </View>
             </View>
 
-            <MyButton text="CONFIRMAR" theme="default"></MyButton>
+            <MyButton text="CONFIRMAR" theme="default" onClick={AskForRide}></MyButton>
         </> 
         
         : 
