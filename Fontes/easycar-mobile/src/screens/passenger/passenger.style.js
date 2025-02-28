@@ -24,5 +24,13 @@ export const styles = {
         alignItems: "center",
         justifyContent: "center",
         marginTop: 20
+    },
+    loading: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    textLoading: {
+        fontSize: 20
     }
 }

@@ -1,25 +1,73 @@
 import MyButton from "../../components/mybutton/mybutton";
-import { Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, Text, TextInput, View } from "react-native";
 import MapView, {Marker, PROVIDER_DEFAULT} from "react-native-maps";
 import { styles } from "./passenger.style.js";
 import { useEffect, useState } from "react";
+import { getCurrentPositionAsync, requestForegroundPermissionsAsync, reverseGeocodeAsync } from "expo-location";
 
 function Passenger(props){
     const [myLocation, setMyLocation] = useState({
-        latitude: 20,
-        longitude: 20
+    
     });
 
     const [title, setTitle] = useState("");
 
+    const [pickupAddress, setPickupAddress] = useState("");
+
+    const [dropoffAddress, setDropoffAddress] = useState("");
+
+    async function RequestPermissionAndGetLocation(){
+
+        const {granted} = await requestForegroundPermissionsAsync();
+
+        if(granted == true){
+            const currentPosition = await getCurrentPositionAsync();
+
+            if(currentPosition.coords){
+                return currentPosition.coords
+            } else {
+                return {};
+            }
+
+        } else {
+            return {};
+        }
+
+    }
+
+    async function RequestAddressName(lat, long){
+        const response = await reverseGeocodeAsync({
+            latitude: lat,
+            longitude: long
+        });
+
+        if(response[0].street && response[0].streetNumber && response[0].district){
+            setPickupAddress(response[0].street + ", " +
+                response[0].streetNumber + " - " + 
+                response[0].district); 
+        }
+    }
+
     async function LoadScreen(){
+
+        //Busca dados de corrida aberta na API
         const response = await RequestRideFromUser();
 
         if(!response.ride_id){
-            setTitle("Encontre a sua carona agora");
+            const location = await RequestPermissionAndGetLocation();
+
+            if(location.latitude){
+                setTitle("Encontre a sua carona agora");
+                setMyLocation(location);
+                RequestAddressName(location.latitude, location,longitude);
+            } else {
+                Alert.alert("Não foi possível obter sua localização!")
+            }
+
         } else {
 
         }
+
     }
 
     async function RequestRideFromUser(){
@@ -46,40 +94,48 @@ function Passenger(props){
     }, [])
 
     return <View style={styles.container}>
-
-        <MapView 
+        {myLocation.latitude ? <>
+            <MapView 
             style={styles.map} 
             provider={PROVIDER_DEFAULT}
             initialRegion={{
-                latitude: -5.20559,
-                longitude: -37.33444,
+                latitude: myLocation.latitude,
+                longitude: myLocation.longitude,
                 latitudeDelta: 0.01,
                 longitudeDelta: 0.01
             }}>
                 <Marker 
                 coordinate={{
-                    latitude: -5.20559,
-                    longitude: -37.33444,
+                    latitude: myLocation.latitude,
+                    longitude: myLocation.longitude,
                 }}
                 title="Passageiro"
                 description="Mossoró/RN"
                 />  
-        </MapView>
-        <View style={styles.footer}>
+            </MapView>
+            <View style={styles.footer}>
                 <View style={styles.footerText}>
                     <Text>{title}</Text>
                 </View>
                 <View style={styles.footerFields}>
                     <Text>Origem</Text>
-                    <TextInput style={styles.input}></TextInput>
+                    <TextInput style={styles.input} value={pickupAddress}></TextInput>
                 </View>
                 <View style={styles.footerFields}>
                     <Text>Destino</Text>
-                    <TextInput style={styles.input}></TextInput>
+                    <TextInput style={styles.input} value={dropoffAddress}></TextInput>
                 </View>
-        </View>
+            </View>
 
-        <MyButton text="CONFIRMAR" theme="default"></MyButton>
+            <MyButton text="CONFIRMAR" theme="default"></MyButton>
+        </> 
+        
+        : 
+        <View style={styles.loading}>
+            <ActivityIndicator size="large"></ActivityIndicator>
+            <Text style={styles.textLoading}>Carregando localização...</Text>
+        </View>
+        }
 
     </View>
 
